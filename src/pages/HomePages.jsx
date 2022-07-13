@@ -31,15 +31,17 @@ class HomePages extends Component {
       .get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`)
       .then((response) => {
         const { results } = response.data;
-        let temp = results.slice();
+        console.log(results);
+        //let temp = results.slice();
         this.setState({ datas: results });
-        this.setState({ datas: temp });
+        //this.setState({ datas: temp });
       })
       .catch((err) => {
         alert(err.toString());
       })
       .finally(() => this.setState({ loading: false }));
   }
+
   // konsumsi Api Menggunakan Fetch API
   async fetchData2() {
     this.setState({ loading: true });
@@ -69,7 +71,7 @@ class HomePages extends Component {
           <p className="text-xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-pink-500 hover:animate-pulse">{this.state.content}</p>
           <div className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-4 lg:grid-cols-5 my-2 mx-2 gap-3">
             {this.state.datas.map((data) => (
-              <Card key={data.id} title={data.title} image={data.poster_path} />
+              <Card key={data.id} title={data.title} image={data.poster_path} vote_average={data.vote_average} />
             ))}
           </div>
         </div>
@@ -83,12 +85,20 @@ export default HomePages;
 let strVal = 
 */
 
-// async fetchData() {
+// konsumsi Api Menggunakan Fetch API
+// async fetchData2() {
 //   this.setState({ loading: true });
-//   await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`)
-//     .then((res) => res.json())
-//     .then((data) => {
-//       console.log(data);
+//   let config = {
+//     method: "get",
+//     url: `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`,
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   };
+//   axios(config)
+//     .then((response) => {
+//       const { results } = response.data;
+//       console.log(results);
 //     })
 //     .catch((err) => {
 //       alert(err.toString());
