@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Card from "../components/Card";
+import axios from "axios";
 import Header from "../components/Header";
 
 class HomePages extends Component {
@@ -8,38 +9,7 @@ class HomePages extends Component {
     title: "-",
     content: "Now Playing in Cinema",
     page: 1,
-    datas: [
-      {
-        id: 1,
-        title: "WandaVison Season 1",
-        image: "https://cdn.europosters.eu/image/750/posters/wandavision-reality-rift-i106807.jpg",
-      },
-      {
-        id: 2,
-        title: "WandaVison Season 2",
-        image: "https://cdn.europosters.eu/image/750/posters/wandavision-reality-rift-i106807.jpg",
-      },
-      {
-        id: 3,
-        title: "WandaVison Season 3",
-        image: "https://cdn.europosters.eu/image/750/posters/wandavision-reality-rift-i106807.jpg",
-      },
-      {
-        id: 4,
-        title: "WandaVison Season 4",
-        image: "https://cdn.europosters.eu/image/750/posters/wandavision-reality-rift-i106807.jpg",
-      },
-      {
-        id: 5,
-        title: "WandaVison Season 5",
-        image: "https://cdn.europosters.eu/image/750/posters/wandavision-reality-rift-i106807.jpg",
-      },
-      {
-        id: 6,
-        title: "WandaVison Season 6",
-        image: "https://cdn.europosters.eu/image/750/posters/wandavision-reality-rift-i106807.jpg",
-      },
-    ],
+    datas: [],
     information: {},
     loading: false,
   };
@@ -54,17 +24,41 @@ class HomePages extends Component {
   async componentDidMount() {
     await this.fetchData();
   }
-  // ini fungsi yang di jalankan ketika component dimuat
+  // ini fungsi yang di jalankan ketika component dimuat axios
   async fetchData() {
-    // setTimeout(() => {
-    this.setState(
-      {
-        title: "Home Test",
+    this.setState({ loading: true });
+    await axios
+      .get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`)
+      .then((response) => {
+        const { results } = response.data;
+        let temp = results.slice();
+        this.setState({ datas: results });
+        this.setState({ datas: temp });
+      })
+      .catch((err) => {
+        alert(err.toString());
+      })
+      .finally(() => this.setState({ loading: false }));
+  }
+  // konsumsi Api Menggunakan Fetch API
+  async fetchData2() {
+    this.setState({ loading: true });
+    let config = {
+      method: "get",
+      url: `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`,
+      headers: {
+        "Content-Type": "application/json",
       },
-      () => {}
-    );
-    // console.log(this.state.title);
-    //}, 2000);
+    };
+    axios(config)
+      .then((response) => {
+        const { results } = response.data;
+        console.log(results);
+      })
+      .catch((err) => {
+        alert(err.toString());
+      })
+      .finally(() => this.setState({ loading: false }));
   }
 
   render() {
@@ -75,7 +69,7 @@ class HomePages extends Component {
           <p className="text-xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-pink-500 hover:animate-pulse">{this.state.content}</p>
           <div className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-4 lg:grid-cols-5 my-2 mx-2 gap-3">
             {this.state.datas.map((data) => (
-              <Card key={data.id} title={data.title} image={data.image} />
+              <Card key={data.id} title={data.title} image={data.poster_path} />
             ))}
           </div>
         </div>
@@ -88,3 +82,16 @@ export default HomePages;
 /* 
 let strVal = 
 */
+
+// async fetchData() {
+//   this.setState({ loading: true });
+//   await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`)
+//     .then((res) => res.json())
+//     .then((data) => {
+//       console.log(data);
+//     })
+//     .catch((err) => {
+//       alert(err.toString());
+//     })
+//     .finally(() => this.setState({ loading: false }));
+// }
