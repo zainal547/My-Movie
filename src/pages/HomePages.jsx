@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Card from "../components/Card";
 import axios from "axios";
 import Header from "../components/Header";
+import { WithRouter } from "../utils/Navigation";
 
 class HomePages extends Component {
   // consturctor
@@ -25,10 +26,10 @@ class HomePages extends Component {
     await this.fetchData();
   }
   // ini fungsi yang di jalankan ketika component dimuat axios
-  async fetchData() {
+  async fetchData(page) {
     this.setState({ loading: true });
     await axios
-      .get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`)
+      .get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=${page}`)
       .then((response) => {
         const { results } = response.data;
         console.log(results);
@@ -42,44 +43,29 @@ class HomePages extends Component {
       .finally(() => this.setState({ loading: false }));
   }
 
-  // konsumsi Api Menggunakan Fetch API
-  async fetchData2() {
-    this.setState({ loading: true });
-    let config = {
-      method: "get",
-      url: `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    axios(config)
-      .then((response) => {
-        const { results } = response.data;
-        console.log(results);
-      })
-      .catch((err) => {
-        alert(err.toString());
-      })
-      .finally(() => this.setState({ loading: false }));
-  }
+  handleScroll = (e) => {
+    let element = e.target;
+    const bottom = element.scrollHeight - element.scrollTop === element.clientHeight;
+    if (bottom) {
+      this.fetchData(this.state.page);
+    }
+  };
 
   render() {
     return (
-      <>
+      <div className="w-full h-screen overflow-auto" onScroll={this.handleScroll}>
         <Header />
-        <div className="w-full h-screen">
-          <p className="text-xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-pink-500 hover:animate-pulse">{this.state.content}</p>
-          <div className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-4 lg:grid-cols-5 my-2 mx-2 gap-3">
-            {this.state.datas.map((data) => (
-              <Card key={data.id} title={data.title} image={data.poster_path} vote_average={data.vote_average} />
-            ))}
-          </div>
+        <p className="text-xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-pink-500 hover:animate-pulse">{this.state.content}</p>
+        <div className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-4 lg:grid-cols-5 my-2 mx-2 gap-3">
+          {this.state.datas.map((data) => (
+            <Card key={data.id} data={data} />
+          ))}
         </div>
-      </>
+      </div>
     );
   }
 }
-export default HomePages;
+export default WithRouter(HomePages);
 
 /* 
 let strVal = 
