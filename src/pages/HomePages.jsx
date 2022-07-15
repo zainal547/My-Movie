@@ -1,19 +1,18 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../components/Card";
 import axios from "axios";
 import Header from "../components/Header";
 import { WithRouter } from "../utils/Navigation";
 
-class HomePages extends Component {
+const HomePages = () => {
   // consturctor
-  state = {
-    title: "-",
-    content: "Now Playing in Cinema",
-    page: 1,
-    datas: [],
-    information: {},
-    loading: false,
-  };
+  const [title, setTitle] = useState("-");
+  const [content, setContent] = useState("Now Playing in Cinema");
+  const [page, setPage] = useState(1);
+  const [movies, setMovies] = useState([]);
+  const [information, setInformation] = useState({});
+  const [loading, setLoading] = useState(false);
+
   /*
   sifat dari state
    1. asynchronous, artinya dia tidak bisa langsung dipakai
@@ -22,49 +21,50 @@ class HomePages extends Component {
    */
 
   //side Effect
-  async componentDidMount() {
-    await this.fetchData();
-  }
+  //useEffect di pnaggil sekali setiap komponen di muat
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   // ini fungsi yang di jalankan ketika component dimuat axios
-  async fetchData(page) {
-    this.setState({ loading: true });
+  const fetchData = async (page) => {
+    setLoading(true);
     await axios
       .get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=${page}`)
       .then((response) => {
         const { results } = response.data;
-        console.log(results);
-        //let temp = results.slice();
-        this.setState({ datas: results });
-        //this.setState({ datas: temp });
+        if (results) {
+          setMovies(results);
+          setPage(2);
+          fetchData(1);
+        }
       })
       .catch((err) => {
         alert(err.toString());
       })
-      .finally(() => this.setState({ loading: false }));
-  }
-
-  handleScroll = (e) => {
-    let element = e.target;
-    const bottom = element.scrollHeight - element.scrollTop === element.clientHeight;
-    if (bottom) {
-      this.fetchData(this.state.page);
-    }
+      .finally(() => setLoading(false));
   };
 
-  render() {
-    return (
-      <div className="w-full h-screen overflow-auto" onScroll={this.handleScroll}>
-        <Header />
-        <p className="text-xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-pink-500 hover:animate-pulse">{this.state.content}</p>
-        <div className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-4 lg:grid-cols-5 my-2 mx-2 gap-3">
-          {this.state.datas.map((data) => (
-            <Card key={data.id} data={data} />
-          ))}
-        </div>
+  // handleScroll = (e) => {
+  //   let element = e.target;
+  //   const bottom = element.scrollHeight - element.scrollTop === element.clientHeight;
+  //   if (bottom) {
+  //     this.fetchData(this.state.page);
+  //   }
+  // };
+
+  return (
+    <div className="w-full h-screen overflow-auto">
+      <Header />
+      <p className="text-xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-pink-500 hover:animate-pulse">{content}</p>
+      <div className="grid grid-flow-row auto-rows-max grid-cols-2 md:grid-cols-4 lg:grid-cols-5 my-2 mx-2 gap-3">
+        {movies.map((movies) => (
+          <Card key={movies.id} data={movies} />
+        ))}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 export default WithRouter(HomePages);
 
 /* 
