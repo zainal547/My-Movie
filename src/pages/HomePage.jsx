@@ -1,7 +1,7 @@
-//import NavBar from "../Components/NavBar";
+import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import MovieCard from "../Components/MovieCard";
+import MovieCard from "../components/MovieCard";
 import Loading from "../assets/Loading";
 async function getMovies(pageNo) {
   const res = await axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_API_KEY}&page=${pageNo}`);
@@ -29,7 +29,7 @@ function HomePage() {
   else
     return (
       <div className="bg-gray-700 min-h-screen flex flex-col items-center h-full">
-        {/* <NavBar /> */}
+        <NavBar />
         <div className="flex flex-wrap justify-evenly">
           {movies.map((movie) => (
             <MovieCard movie={movie} />
