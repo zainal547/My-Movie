@@ -1,7 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
-const Header = () => {
+function NavBar() {
   return (
     <nav className="sticky top-0 w-full border-gray-200 sm:px-4 py-2.5 bg-slate-800 flex justify-between">
       <h1 className="hover:animate-bounce hover:duration-1000">
@@ -14,5 +13,6 @@ const Header = () => {
       </Link>
     </nav>
   );
-};
-export default Header;
+}
+
+export default NavBar;
