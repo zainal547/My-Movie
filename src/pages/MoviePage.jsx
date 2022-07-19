@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import NavBar from "./../Components/NavBar";
-import play_icon from "./../assets/play_icon.png";
+import NavBar from "../Components/NavBar";
+import play_icon from "../assets/play_icon.png";
 import Loading from "../assets/Loading";
 async function getMovie(movieId) {
   const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.REACT_APP_API_KEY}
