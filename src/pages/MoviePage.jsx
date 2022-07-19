@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import NavBar from "../Components/NavBar";
+//import NavBar from "../Components/NavBar";
 import play_icon from "../assets/play_icon.png";
 import Loading from "../assets/Loading";
 async function getMovie(movieId) {
@@ -62,10 +62,10 @@ function MoviePage() {
 
   return (
     <div>
-      <NavBar />
+      {/* <NavBar /> */}
 
       <div className="bg-gray-700 min-h-[100vh] text-white text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-6xl font-bold">
-        {width < 768 ? <NavBar /> : <img src={"https://image.tmdb.org/t/p/original/" + movie.backdrop_path} alt="backdrop" className="w-screen aspect-video absolute top-0" />}
+        {width < 768 ? <></> : <img src={"https://image.tmdb.org/t/p/original/" + movie.backdrop_path} alt="backdrop" className="w-screen aspect-video absolute top-0" />}
         <div
           className="flex flex-col items-center justify-center md:flex-row md:ml-[50px]"
           style={{

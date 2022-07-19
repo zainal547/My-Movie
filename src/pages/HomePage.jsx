@@ -1,4 +1,4 @@
-import NavBar from "../Components/NavBar";
+//import NavBar from "../Components/NavBar";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import MovieCard from "../Components/MovieCard";
@@ -29,7 +29,7 @@ function HomePage() {
   else
     return (
       <div className="bg-gray-700 min-h-screen flex flex-col items-center h-full">
-        <NavBar />
+        {/* <NavBar /> */}
         <div className="flex flex-wrap justify-evenly">
           {movies.map((movie) => (
             <MovieCard movie={movie} />
